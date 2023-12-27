@@ -1,1 +1,26 @@
 komunikasi antar aplikasi bisa disebut RPC(remote procedure call)
+-> minus sangat ketergantungan
+-> plus realtime
+
+
+RPC adalah mekanisme komunikasi, dimana pengirim menentukan siapa yang menerima data
+selain RPC terdapat mekanisme Messaging, dalam messaging pengirim tidak menentukan yang menerima data melainkan pengirim akan mengirim data ke perantara(message broker)
+penerima data akan mengambil data langsung dari perantara
+jadi ketika ada penerima data baru, pengitim tidak harus tahu karena tugas pengirim data hanya mengirim ke perantara
+semua aplikasi yang mengambil data, maka akan memproses secara pararel
+
+kekurangan messaging adlah tidak realtime(ada delay) -> menyebabkan tidak konsisten datanya
+jika ada kegagalan pengiriman data, pengirim tidak akan tahu, oleh karen itu penerim data harus memiliki kemampuan untuk melkukan retry
+
+Rabbitmq mengikuti standard protokol AMQP(advanced message queuing protocol), jadi ketika tidak ingin menggunakan RabbitMQ jita bisa menggunakan message broker lain yang mengikuti standard AMQP
+
+untuk mengktifkan web management kita bisa gunakan perintah
+rbbitmq-plugins enble rabbitmq_management
+
+exchnge 
+saat pengirim dt mengirim dta ke rbbitmq data harus dikirim ke exchange, jdi data tidak langsung dikirimkan ke penerima data, melainkan kan diterima di Exchange terlebih dahulu
+setelah diterima di exchange, data akan ditentukan harus dilanjutkan kemana, sesuai dengan tipe dari Exchangenya
+pengirim data(producer) -> exchange
+untuk membuat exchnge gunkan web management pada bagian exchanges
+sat membuat exchange kita harus menentukan seperti
+name, type exchange, durability(apakah exchange tetap aada setelah rabbitMQ di restart, durable untuk tetap ada, transiet hilang setelah direstart), auto delete apakah exchange otomatis dihapus ketika semua queue di unbind, internal(hanya bisa digunakan oleh internal rabbitmq), alternare-exchange jika data tidak berhasil dikirim ke queue maka akan dikirim ke Alternate-exchange
