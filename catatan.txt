@@ -17,10 +17,74 @@ Rabbitmq mengikuti standard protokol AMQP(advanced message queuing protocol), ja
 untuk mengktifkan web management kita bisa gunakan perintah
 rbbitmq-plugins enble rabbitmq_management
 
-exchnge 
-saat pengirim dt mengirim dta ke rbbitmq data harus dikirim ke exchange, jdi data tidak langsung dikirimkan ke penerima data, melainkan kan diterima di Exchange terlebih dahulu
+excahnge 
+saat pengirim dt mengirim data ke rbbitmq data harus dikirim ke exchange, jadi data tidak langsung dikirimkan ke penerima data, melainkan kan diterima di Exchange terlebih dahulu
 setelah diterima di exchange, data akan ditentukan harus dilanjutkan kemana, sesuai dengan tipe dari Exchangenya
 pengirim data(producer) -> exchange
-untuk membuat exchnge gunkan web management pada bagian exchanges
+untuk membuat excahnge gunkan web management pada bagian exchanges
 sat membuat exchange kita harus menentukan seperti
-name, type exchange, durability(apakah exchange tetap aada setelah rabbitMQ di restart, durable untuk tetap ada, transiet hilang setelah direstart), auto delete apakah exchange otomatis dihapus ketika semua queue di unbind, internal(hanya bisa digunakan oleh internal rabbitmq), alternare-exchange jika data tidak berhasil dikirim ke queue maka akan dikirim ke Alternate-exchange
+name, type exchange, durability(apakah exchange tetap ada setelah rabbitMQ di restart, durable untuk tetap ada, transiet hilang setelah direstart), auto delete apakah exchange otomatis dihapus ketika semua queue di unbind, internal(hanya bisa digunakan oleh internal rabbitmq), alternare-exchange jika data tidak berhasil dikirim ke queue maka akan dikirim ke Alternate-exchange
+
+queue
+tempat menyimpan data yang diterima oleh excahnge
+excahnge akan meneruskan data yang diterima ke queue
+jika kita membuat exchange yang tidak memiliki queue maka data akan hilang di Exchange
+queue digunakan oleh consumer(penerima)
+saat mengirim data tidak terhubung secara langsung, maka harus membuat koneksi terlebih dahulu
+untuk membuat queue kita perlu setting ->
+virtual host ->
+Type -> type queue -> disarankan menggunakan Quorum, stream digunakan untuk kebutuhan data Straming
+Name -> untuk nama queue
+Arguments -> untuk informasi tambahan queue
+perbedaan classic dan Quorum, di quorum banyak fitur yang tidak ada karena keamanan data, dan bisa berjalan lebih baik
+https://www.rabbitmq.com/quorum-queues.html 
+
+binding
+koneksi antara exchange dan queue
+kita bisa melakukan binding dari satu exchange ke beberapa queue atau sebaliknya
+masuk ke queue -> binding -> from exchange(nama exchange), routing key(kunci dari antriannya)
+cek di exchange -> nama exchange -> bindings
+
+type exchange:
+direct
+direct excahnge adalah tipe exchange yang ketika menerima data dia akan merutekan data ke queue sesui dengn routing key saat proses binding
+jik kita mengirim data ke exchange dengan routing key yang tidak ada di Binding ke Queue maka secara otomatis akan dikirimkan ke alternate-excahnge, jika tidak ada alternte exchange maka data akan hilang secara misterius
+saat melakukn direct excahnge tidak ada batasan untuk melakukan binding ke queue yang sama, bahkan menggunkn routing key yang berbeda
+misal kita membuat queue baru bernama all_notification, lalu membuat binding untuk routing email, sms dan whatsapps jika terdapat exchange data dengan routing key email maka akan mengirimkan data ke queue dengan routing binding email
+
+publish message
+message format ->
+routing key -> routing key digunakan untuk merutekan
+headers -> informasi tambahan key-value
+properties -> mirip headers namun sudah baku bawaan rabbitmq (jika menginputkan diluar pilihan maka akan diignore)
+payload -> data yang dikirimkan oleh producernya
+
+consume message -> membaca data queue
+message yang dikonsume akan hilang dari queue
+siapa yang pertama masuk queue akan diproses dahulu
+untuk get message bisa menggunakan perlu atur act mode ->
+neck message -> diambil lalu dikirimkan kembali ke antrian paling belakang
+auto ack -> langsung baca, diantrian hilang
+
+fanout exchange
+merutekan setiap data ke seluruh queue
+artinya setiap data yang kita kirim ke exchange akan diteruskan ke seluruh queue(tidak mempedulikan routing keynya) 
+mirip broadcast
+tidak wajib memberikan routing key saat bind
+
+Topic exchange
+mirip dengan direct hanya saja routing keynya menggunakan kata-kata yang dipisahkan menggunakan titik
+contoh coustomers.event
+saat melakukan binding kita bisa menggunakan tanda
+* digunakan satu kata
+# digunakan untuk nol atau lebih kata
+customers.event.* artinya routing key pesan akan dikirimkan ke semua routing dengan key sama + satu kata setelah titik contoh customers.event.new
+customer.event.# artinya bisa untuk routing key customers.a, customers.a.b, customers.a.b.c
+*.event.* artinya bisa untuk customers.event.a, sellers.event.b
+# bisa untuk semua routing
+
+
+Header exchange
+perutean yang melakukan perutean data ke queue menggunakan header di message
+jika headernya tidak sesuai maka datanya akan hilang
+routing key boleh dikosongkan
