@@ -88,3 +88,22 @@ Header exchange
 perutean yang melakukan perutean data ke queue menggunakan header di message
 jika headernya tidak sesuai maka datanya akan hilang
 routing key boleh dikosongkan
+
+round-robin disprching
+kita bisa menjalankan consumer lebih dari satu, dengan kemampuan ini kita bisa menjadikan pemrosesan data di QUEUE bisa dilakukan secara pararel dan dilakukan lebih cepat
+
+virtual host
+mirip virtual machine, dengan virtual host kita bisa membuat exchange dan queue terpisah2 dalam virtual host
+misal kita menjalankan rabbitmq yg digunakan oleh banyak tim, kita bisa buat tim memiliki virtual host masing2, sehingga exchnge dan queue antar tim tidak bentrok
+defaultnya /
+untuk membuat virtual host kita bisa gunakan menu admin -> virtual host kemudian gunakan ketika membuat exchange/queue
+
+Policy
+kita bisa menambahkan arguments secara otomatis pada exchange atau queue secara otomatis tanpa harus menambahkan satu per stu secara manual
+untuk membuat policies bisa gunakan menu admin
+name -> nama policynya
+pattern -> regular expression pemilihan excahnge atau queue yang ingin ditambhkan policynya(belajar regular expresion)
+priority -> jika terdapat policy yang berbeda untuk exchange atau queue yang sana, maka akan diurutkan sesuai priority, karena policy cuma digunakan satu saja
+Definition, arguments yang akan ditambahkan ke exchange atau queue
+hasil dari exchange akan berada di bagian feature di exchange atau queue
+policy yang digunakan hanya satu
