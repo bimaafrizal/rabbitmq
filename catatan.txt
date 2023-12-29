@@ -107,3 +107,25 @@ priority -> jika terdapat policy yang berbeda untuk exchange atau queue yang san
 Definition, arguments yang akan ditambahkan ke exchange atau queue
 hasil dari exchange akan berada di bagian feature di exchange atau queue
 policy yang digunakan hanya satu
+
+User management
+untuk publish dan consume kita perlu menggunakan user, untuk melihat user yang terdapat di RabbitMQ kita bisa menggunakan menu Admin -> User
+untuk membuat user cukup menambahkan informasi username, password, dan tugas
+tags digunakan untuk mengecek kemmpun apa saja yang bisa dilakukan oleh user
+user tags
+none -> tidak bisa mengakses web management
+managemet -> web management, virtual host yang dibolehkan, exchange, queue, binding di virtual host
+policy maker -> semua di management + Policy
+monitoring -> semua di management + semua informasi di virtual host
+administrator -> super
+
+untuk menambahkan permission untuk mengakses virtual host ->
+menentukan regular expression untuk operasi mana yang diperbolehkan
+operasi digroup berdasarkan 3 group configure, write, dan read
+https://www.rabbitmq.com/access-control.html
+klik user yang sudah dibuat, rubah bagian permission
+
+
+Client Library
+kode2 yang disediakan untuk digunakan agar bisa berinreraksi dengan Rabbitmq
+https://www.rabbitmq.com/devtools.html
