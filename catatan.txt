@@ -129,3 +129,6 @@ klik user yang sudah dibuat, rubah bagian permission
 Client Library
 kode2 yang disediakan untuk digunakan agar bisa berinreraksi dengan Rabbitmq
 https://www.rabbitmq.com/devtools.html
+
+membuat connection ke rabbitmq
+amqp://username:password@host:port/virtual_host
